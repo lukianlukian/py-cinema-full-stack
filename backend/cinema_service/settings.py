@@ -150,9 +150,6 @@ STATIC_URL = "static/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", BASE_DIR / "media"))
-FRONTEND_DIST = Path(
-    os.environ.get("FRONTEND_DIST", BASE_DIR.parent / "frontend" / "dist")
-)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
