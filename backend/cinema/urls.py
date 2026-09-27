@@ -18,6 +18,27 @@ router.register("movies", MovieViewSet)
 router.register("movie_sessions", MovieSessionViewSet)
 router.register("orders", OrderViewSet)
 
-urlpatterns = [path("", include(router.urls))]
+urlpatterns = [
+    # Compatibility with the URLs used by the supplied frontend.
+    path(
+        "movies-<int:pk>/",
+        MovieViewSet.as_view({"get": "retrieve"}),
+        name="frontend-movie-detail",
+    ),
+    path(
+        "movie_sessions-<int:pk>/",
+        MovieSessionViewSet.as_view({"get": "retrieve"}),
+        name="frontend-session-detail",
+    ),
+    path(
+        "movies-<int:pk>-upload-image/",
+        MovieViewSet.as_view(
+            {"post": "upload_image"},
+            **MovieViewSet.upload_image.kwargs,
+        ),
+        name="frontend-movie-image",
+    ),
+    path("", include(router.urls)),
+]
 
 app_name = "cinema"
