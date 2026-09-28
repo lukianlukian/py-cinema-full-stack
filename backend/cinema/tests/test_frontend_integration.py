@@ -35,10 +35,10 @@ class FrontendIntegrationTests(TestCase):
             HTTP_AUTHORIZATION=f"Bearer {login.data['access']}"
         )
         self.assertEqual(self.client.get("/api/user/me/").status_code, 200)
-        movie = self.client.get(f"/api/cinema/movies-{self.movie.pk}/")
+        movie = self.client.get(f"/api/cinema/movies/{self.movie.pk}/")
         self.assertEqual(movie.status_code, 200)
         self.assertEqual(movie.data["id"], self.movie.pk)
-        session_url = f"/api/cinema/movie_sessions-{self.session.pk}/"
+        session_url = f"/api/cinema/movie_sessions/{self.session.pk}/"
         self.assertEqual(self.client.get(session_url).status_code, 200)
         order = self.client.post(
             "/api/cinema/orders/",
@@ -52,15 +52,15 @@ class FrontendIntegrationTests(TestCase):
         )
         self.assertEqual(self.client.get("/api/cinema/orders/").data["count"], 1)
 
-    def test_aliases_require_authentication(self):
+    def test_details_require_authentication(self):
         for url in (
-            f"/api/cinema/movies-{self.movie.pk}/",
-            f"/api/cinema/movie_sessions-{self.session.pk}/",
+            f"/api/cinema/movies/{self.movie.pk}/",
+            f"/api/cinema/movie_sessions/{self.session.pk}/",
         ):
             self.assertEqual(self.client.get(url).status_code, 401)
 
-    def test_image_alias_requires_staff_and_accepts_upload(self):
-        url = f"/api/cinema/movies-{self.movie.pk}-upload-image/"
+    def test_image_upload_requires_staff_and_accepts_upload(self):
+        url = f"/api/cinema/movies/{self.movie.pk}/upload-image/"
         self.client.force_authenticate(self.user)
         self.assertEqual(self.client.post(url, {}).status_code, 403)
         self.user.is_staff = True
